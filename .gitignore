@@ -1,0 +1,104 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rtefacts/
+*.log
+*.vspscc
+*.vssscc
+.builds
+*.pidb
+*.svclog
+*.scc
+_Csproj.user
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+.vs/
+.vscode/
+*.dbmdl
+*.jfm
+*.pfx
+*.publishsettings
+project.lock.json
+project.fragment.lock.json
+artifacts/
+PublishProfiles/
+*.pubxml
+*.azurePubxml
+
+# Entity Framework
+*.mdf
+*.ldf
+*.ndf
+Migrations/
+
+# Node / Angular
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dist/
+tmp/
+out-tsc/
+.angular/
+.sass-cache/
+
+# IDEs
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+appsettings.Development.json
+appsettings.Production.json
+
+# Docker
+docker-compose.override.yml
+
+# Testing
+coverage/
+*.coverage
+*.coveragexml
+TestResults/
+
+# Build results
+[Bb]uild[Ll]og.*
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.pgc
+*.pgd
+*.rsp
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.vspscc
+*.vssscc
+.builds
