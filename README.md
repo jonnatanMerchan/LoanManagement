@@ -5,7 +5,6 @@ Sistema completo de gestión de préstamos desarrollado con .NET Core 8 y Angula
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)
 ![Angular](https://img.shields.io/badge/Angular-17+-DD0031?logo=angular)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-336791?logo=postgresql)
-![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)
 
 ## 📋 Tabla de Contenidos
 
@@ -17,9 +16,7 @@ Sistema completo de gestión de préstamos desarrollado con .NET Core 8 y Angula
 - [Ejecución del Proyecto](#-ejecución-del-proyecto)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [API Endpoints](#-api-endpoints)
-- [Testing](#-testing)
 - [Tecnologías](#-tecnologías)
-- [Contribución](#-contribución)
 
 ## 📖 Descripción
 
@@ -54,8 +51,7 @@ LoanManagement/
 ├── LoanManagement.API/           # Capa de presentación (Controllers, Middleware)
 ├── LoanManagement.Application/   # Lógica de negocio (Services, DTOs, Validators)
 ├── LoanManagement.Domain/        # Entidades y contratos (Entities, Interfaces)
-├── LoanManagement.Infrastructure/# Implementación (Repositories, DbContext)
-└── LoanManagement.Tests/         # Pruebas unitarias y de integración
+└── LoanManagement.Infrastructure/# Implementación (Repositories, DbContext)
 ```
 
 ### Frontend - Feature-Based Architecture
@@ -70,155 +66,89 @@ loan-management-ui/
 
 ## 🔧 Requisitos Previos
 
-Asegúrate de tener instalado lo siguiente antes de comenzar:
+Para ejecutar este proyecto necesitas tener instalado:
 
-### Opción 1: Con Docker (Recomendado)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) (20.10+)
-- [Docker Compose](https://docs.docker.com/compose/install/) (2.0+)
-
-### Opción 2: Instalación Local
 - [.NET SDK 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)
 - [Node.js](https://nodejs.org/) (18+ LTS)
 - [Angular CLI](https://angular.io/cli) (17+)
   ```bash
   npm install -g @angular/cli@17
   ```
-- [PostgreSQL](https://www.postgresql.org/download/) (13+) o [SQL Server](https://www.microsoft.com/sql-server/sql-server-downloads)
+- [PostgreSQL](https://www.postgresql.org/download/) (13+)
 - [Git](https://git-scm.com/downloads)
-
-### Herramientas Opcionales
-- [Visual Studio 2022](https://visualstudio.microsoft.com/) o [VS Code](https://code.visualstudio.com/)
-- [Postman](https://www.postman.com/) para testing de APIs
-- [pgAdmin](https://www.pgadmin.org/) para gestión de PostgreSQL
 
 ## 📥 Instalación y Configuración
 
 ### 1. Clonar el Repositorio
+
+Abre tu terminal y clona el proyecto:
 
 ```bash
 git clone https://github.com/tu-usuario/loan-management-system.git
 cd loan-management-system
 ```
 
-### 2. Configuración con Docker (Recomendado)
+### 2. Configurar la Base de Datos
 
-#### Paso 1: Configurar Variables de Entorno
-
-Crea un archivo `.env` en la raíz del proyecto:
-
-```env
-# Database
-POSTGRES_USER=loanadmin
-POSTGRES_PASSWORD=SecurePass123!
-POSTGRES_DB=LoanManagementDB
-DB_PORT=5432
-
-# API
-API_PORT=5000
-ASPNETCORE_ENVIRONMENT=Development
-
-# Frontend
-FRONTEND_PORT=4200
-```
-
-#### Paso 2: Levantar los Servicios
+Primero, asegúrate de que PostgreSQL esté corriendo. Puedes verificarlo ejecutando:
 
 ```bash
-# Construir y levantar todos los contenedores
-docker-compose up --build
-
-# O en modo detached (segundo plano)
-docker-compose up -d
+psql --version
 ```
 
-Espera a que todos los servicios estén listos (aproximadamente 2-3 minutos en el primer arranque).
-
-#### Paso 3: Verificar los Servicios
-
-- **Frontend:** http://localhost:4200
-- **Backend API:** http://localhost:5000/swagger
-- **Base de Datos:** localhost:5432
+Crea la base de datos:
 
 ```bash
-# Ver logs de los contenedores
-docker-compose logs -f
-
-# Ver estado de los servicios
-docker-compose ps
+psql -U postgres
+CREATE DATABASE LoanManagementDb;
+\q
 ```
 
-#### Paso 4: Aplicar Migraciones (Automático)
+### 3. Configurar el Backend
 
-Las migraciones se aplican automáticamente al iniciar el contenedor del backend. Si necesitas aplicarlas manualmente:
-
-```bash
-docker-compose exec api dotnet ef database update
-```
-
-### 3. Configuración Local (Sin Docker)
-
-#### Backend
-
-##### Paso 1: Restaurar Dependencias
+Ve a la carpeta del backend:
 
 ```bash
 cd LoanManagement
-dotnet restore
 ```
 
-##### Paso 2: Configurar Base de Datos
-
-Edita `appsettings.Development.json` en el proyecto `LoanManagement.API`:
+Edita el archivo `appsettings.json` y actualiza la cadena de conexión con tus credenciales de PostgreSQL:
 
 ```json
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5432;Database=LoanManagementDB;Username=tu_usuario;Password=tu_password"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information",
-      "Microsoft.AspNetCore": "Warning"
-    }
+    "DefaultConnection": "Host=localhost;Port=5432;Database=LoanManagementDb;Username=postgres;Password=TU_PASSWORD"
   }
 }
 ```
 
-##### Paso 3: Aplicar Migraciones
+Restaura las dependencias del proyecto:
 
 ```bash
-cd LoanManagement.API
-dotnet ef database update --project ../LoanManagement.Infrastructure
+dotnet restore
+```
 
-# O si tienes dotnet-ef instalado globalmente
-dotnet tool install --global dotnet-ef
+Aplica las migraciones para crear las tablas en la base de datos:
+
+```bash
 dotnet ef database update
 ```
 
-##### Paso 4: Ejecutar el Backend
+### 4. Configurar el Frontend
 
-```bash
-cd LoanManagement.API
-dotnet run
-
-# O con hot reload
-dotnet watch run
-```
-
-La API estará disponible en: http://localhost:5000/swagger
-
-#### Frontend
-
-##### Paso 1: Instalar Dependencias
+En otra terminal, ve a la carpeta del frontend:
 
 ```bash
 cd loan-management-ui
+```
+
+Instala las dependencias de npm:
+
+```bash
 npm install
 ```
 
-##### Paso 2: Configurar API Endpoint
-
-Edita `src/environments/environment.development.ts`:
+Edita el archivo `src/environments/environment.development.ts` para que apunte a tu API local:
 
 ```typescript
 export const environment = {
@@ -227,84 +157,39 @@ export const environment = {
 };
 ```
 
-##### Paso 3: Ejecutar el Frontend
+## 🚀 Ejecución del Proyecto
+
+### Iniciar el Backend
+
+En la terminal del backend, ejecuta:
+
+```bash
+dotnet run --project LoanManagement.API
+```
+
+El backend estará corriendo en: http://localhost:5000
+
+Puedes verificar que funciona visitando: http://localhost:5000/swagger
+
+### Iniciar el Frontend
+
+En la terminal del frontend, ejecuta:
 
 ```bash
 npm start
+```
 
-# O directamente con Angular CLI
+O si prefieres usar Angular CLI directamente:
+
+```bash
 ng serve
 ```
 
-La aplicación estará disponible en: http://localhost:4200
+El frontend estará disponible en: http://localhost:4200
 
-## 🚀 Ejecución del Proyecto
+### Verificar que Todo Funciona
 
-### Comandos Útiles de Docker
-
-```bash
-# Iniciar servicios
-docker-compose up
-
-# Detener servicios
-docker-compose down
-
-# Reiniciar un servicio específico
-docker-compose restart api
-
-# Ver logs de un servicio
-docker-compose logs -f frontend
-
-# Reconstruir imágenes
-docker-compose up --build
-
-# Limpiar todo (contenedores, volúmenes, imágenes)
-docker-compose down -v --rmi all
-```
-
-### Comandos Útiles del Backend
-
-```bash
-# Compilar
-dotnet build
-
-# Ejecutar tests
-dotnet test
-
-# Crear nueva migración
-dotnet ef migrations add NombreMigracion --project LoanManagement.Infrastructure
-
-# Revertir última migración
-dotnet ef database update PreviousMigration
-
-# Generar script SQL
-dotnet ef migrations script
-
-# Verificar migraciones pendientes
-dotnet ef migrations list
-```
-
-### Comandos Útiles del Frontend
-
-```bash
-# Desarrollo
-npm start
-
-# Build para producción
-npm run build
-
-# Tests unitarios
-npm test
-
-# Tests con coverage
-npm run test:coverage
-
-# Linting
-npm run lint
-
-# Formatear código
-npm run format
-```
+Abre tu navegador y ve a http://localhost:4200. Deberías ver la interfaz del sistema de gestión de préstamos. Prueba creando un cliente nuevo para verificar que la comunicación entre frontend y backend funciona correctamente.
 
 ## 📁 Estructura del Proyecto
 
@@ -335,16 +220,12 @@ LoanManagement/
 │   ├── Enums/                    # Enumeraciones
 │   └── Interfaces/               # Repositorios (contratos)
 │
-├── LoanManagement.Infrastructure/
-│   ├── Data/                     # DbContext y configuraciones
-│   │   ├── AppDbContext.cs
-│   │   └── Configurations/       # Entity configurations
-│   ├── Repositories/             # Implementación de repositorios
-│   └── Migrations/               # Migraciones de EF Core
-│
-└── LoanManagement.Tests/
-    ├── Unit/                     # Tests unitarios
-    └── Integration/              # Tests de integración
+└── LoanManagement.Infrastructure/
+    ├── Data/                     # DbContext y configuraciones
+    │   ├── AppDbContext.cs
+    │   └── Configurations/       # Entity configurations
+    ├── Repositories/             # Implementación de repositorios
+    └── Migrations/               # Migraciones de EF Core
 ```
 
 ### Frontend
@@ -443,40 +324,6 @@ curl -X POST http://localhost:5000/api/loans \
   }'
 ```
 
-## 🧪 Testing
-
-### Backend Tests
-
-```bash
-# Ejecutar todos los tests
-dotnet test
-
-# Con cobertura
-dotnet test /p:CollectCoverage=true
-
-# Tests de un proyecto específico
-dotnet test LoanManagement.Tests/LoanManagement.Tests.csproj
-
-# Ver resultados detallados
-dotnet test --logger "console;verbosity=detailed"
-```
-
-### Frontend Tests
-
-```bash
-# Tests unitarios
-npm test
-
-# Tests en modo watch
-npm run test:watch
-
-# Cobertura
-npm run test:coverage
-
-# E2E tests
-npm run e2e
-```
-
 ## 🛠️ Tecnologías
 
 ### Backend
@@ -487,8 +334,6 @@ npm run e2e
 - **FluentValidation** - Validaciones
 - **Serilog** - Logging estructurado
 - **Swagger/OpenAPI** - Documentación de API
-- **xUnit** - Testing framework
-- **Moq** - Mocking para tests
 
 ### Frontend
 - **Angular 17+** - Framework SPA
@@ -497,125 +342,7 @@ npm run e2e
 - **TypeScript** - Lenguaje tipado
 - **Tailwind CSS** - Utilidades CSS
 - **Chart.js** - Gráficos y visualizaciones
-- **Jasmine + Karma** - Testing
-
-### DevOps
-- **Docker** - Contenedorización
-- **Docker Compose** - Orquestación local
-- **GitHub Actions** - CI/CD
-- **Nginx** - Servidor web para frontend
-
-## 🐛 Solución de Problemas
-
-### Error: No se puede conectar a la base de datos
-
-```bash
-# Verificar que PostgreSQL esté corriendo
-docker-compose ps
-
-# Ver logs de la base de datos
-docker-compose logs db
-
-# Reiniciar el servicio de base de datos
-docker-compose restart db
-```
-
-### Error: Puerto 5000 ya está en uso
-
-```bash
-# Cambiar el puerto en docker-compose.yml
-ports:
-  - "5001:80"  # Usar 5001 en lugar de 5000
-
-# O detener el proceso que usa el puerto
-# Windows
-netstat -ano | findstr :5000
-taskkill /PID <PID> /F
-
-# Linux/Mac
-lsof -ti:5000 | xargs kill -9
-```
-
-### Error: npm install falla
-
-```bash
-# Limpiar caché de npm
-npm cache clean --force
-
-# Eliminar node_modules y package-lock.json
-rm -rf node_modules package-lock.json
-
-# Reinstalar
-npm install
-```
-
-### Error: Migraciones no se aplican
-
-```bash
-# Verificar estado de migraciones
-dotnet ef migrations list
-
-# Aplicar manualmente
-cd LoanManagement.API
-dotnet ef database update --verbose
-
-# Si persiste, eliminar la base de datos y recrear
-dotnet ef database drop
-dotnet ef database update
-```
-
-## 📝 Variables de Entorno
-
-### Backend (appsettings.json)
-
-```json
-{
-  "ConnectionStrings": {
-    "DefaultConnection": "tu_connection_string"
-  },
-  "Jwt": {
-    "Key": "tu_jwt_secret_key",
-    "Issuer": "LoanManagementAPI",
-    "Audience": "LoanManagementClient"
-  },
-  "Logging": {
-    "LogLevel": {
-      "Default": "Information"
-    }
-  }
-}
-```
-
-### Frontend (environment.ts)
-
-```typescript
-export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:5000/api',
-  pageSize: 10
-};
-```
-
-## 🤝 Contribución
-
-1. Fork el proyecto
-2. Crea tu feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push al branch (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
 
 ## 👥 Autores
 
-- **Tu Nombre** - *Desarrollo inicial* - [tu-github](https://github.com/tu-usuario)
-
-## 📞 Soporte
-
-Para soporte, envía un email a soporte@loanmanagement.com o abre un issue en GitHub.
-
----
-
-⭐ Si este proyecto te fue útil, considera darle una estrella en GitHub!
+- **Jonnatan Merchan** 
