@@ -1,6 +1,6 @@
 # 🏦 Loan Management System
 
-Sistema completo de gestión de préstamos desarrollado con .NET Core 8 y Angular 17+, implementando arquitectura limpia y mejores prácticas de desarrollo.
+Sistema completo de gestión de préstamos desarrollado con .NET Core 8 y Angular 17+
 
 ![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)
 ![Angular](https://img.shields.io/badge/Angular-17+-DD0031?logo=angular)
@@ -20,7 +20,7 @@ Sistema completo de gestión de préstamos desarrollado con .NET Core 8 y Angula
 
 ## 📖 Descripción
 
-Sistema integral para la gestión de préstamos que permite administrar clientes, solicitudes de préstamos, aprobaciones y registro de pagos. Desarrollado con arquitectura limpia, separación de responsabilidades y principios SOLID.
+Sistema integral para la gestión de préstamos que permite administrar clientes, solicitudes de préstamos, aprobaciones y registro de pagos.
 
 ## ✨ Características
 
