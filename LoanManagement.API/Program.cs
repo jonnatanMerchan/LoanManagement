@@ -93,6 +93,8 @@ if (app.Environment.IsDevelopment())
     await SeedDatabase(context);
 }
 
+
+
 app.Run();
 
 // Database seeding method
